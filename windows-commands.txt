@@ -1,0 +1,54 @@
+1) go mod init github.com/tools/your_serivce_name   (write your service name at 'your_serivce_name')
+2) go mod tidy  (to download all dependencies and files)
+
+3) once all error gone, you will find 'your_serivce_name'.exe file that will run your program
+
+4) go build && .\'your_serivce_name'.exe config/local-config.json (every time you change anything in your code, use this command to build project)
+
+
+5) for DB connection:
+  check util/dbConnectionUtil.go to understand db connection
+
+  here is a short portion of code for db connection :
+
+  func CreateDBConnection() *gorm.DB {
+	fmt.Println("Connecting....")
+
+	// Fetch database configuration details
+	dbHost := "Hostname"
+	dbPort := "port number"
+	dbName := "database name"
+	dbUsername := "user name"
+	dbPassword := "databse password"
+
+	// Build data source string
+	dataSourceName := "host=" + dbHost + " user=" + dbUsername +
+		" password=" + dbPassword + " dbname=" + dbName +
+		" port=" + strconv.Itoa(dbPort) + " sslmode=disable"
+
+	// Set up logging for GORM
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			LogLevel: logger.Info,
+			Colorful: true,
+		},
+	)
+
+	// Open the database connection
+	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
+		Logger: newLogger,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+	if err != nil {
+		panic("failed to connect to the database: " + err.Error())
+	}
+
+	return db
+}
+
+here you will get a connection that will help you to execute you query 
+(we have used gorm check youtube to learn how to execute queries using gorm)

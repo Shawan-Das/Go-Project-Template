@@ -1,0 +1,4 @@
+
+*.exe
+iservice
+.vscode/settings.json
