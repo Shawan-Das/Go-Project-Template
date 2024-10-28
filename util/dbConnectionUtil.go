@@ -19,6 +19,46 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+// raw Database Connection
+func CreateRawDBConnection() *gorm.DB {
+	fmt.Println("Connecting....")
+
+	// Fetch database configuration details
+	dbHost := "HostName"
+	dbPort := 0000
+	dbName := "Databse Name"
+	dbUsername := "UserName"
+	dbPassword := "password"
+
+	// Build data source string
+	dataSourceName := "host=" + dbHost + " user=" + dbUsername +
+		" password=" + dbPassword + " dbname=" + dbName +
+		" port=" + strconv.Itoa(dbPort) + " sslmode=disable"
+
+	// Set up logging for GORM
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			LogLevel: logger.Info,
+			Colorful: true,
+		},
+	)
+
+	// Open the database connection
+	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
+		Logger: newLogger,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+	if err != nil {
+		panic("failed to connect to the database: " + err.Error())
+	}
+
+	return db
+}
+
 // main database connection
 func CreateDBConnection() *gorm.DB {
 	fmt.Println("Connecting....")
