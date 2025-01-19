@@ -11,7 +11,7 @@ import (
 	"unicode"
 
 	"github.com/alexedwards/argon2id"
-	"github.com/tools/iservice/model"
+	_ "github.com/tools/system/model"
 )
 
 var ConfigDetails string
@@ -200,18 +200,6 @@ func FindDuplicatesInt(nums []int) []int {
 	}
 
 	return duplicates
-}
-
-func Yearinfo(yearid int) (model.Yearinfo, error) {
-	var yearinfo model.Yearinfo
-	db := CreateConnectionUsingGormToCommonSchema()
-	sqlDb, _ := db.DB()
-	defer sqlDb.Close()
-	result := db.Where("yearcode = ?", yearid).First(&yearinfo)
-	if result.Error != nil {
-		return model.Yearinfo{}, result.Error
-	}
-	return yearinfo, nil
 }
 
 func CreateFileDetails(fileDetails string) (string, string, string) {

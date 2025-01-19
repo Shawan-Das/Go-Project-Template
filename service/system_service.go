@@ -13,11 +13,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	_ "github.com/tools/iservice/docs"
-	_ "github.com/tools/iservice/repository"
-	"github.com/tools/iservice/util"
+	// swaggerfiles "github.com/swaggo/files"
+	// ginSwagger "github.com/swaggo/gin-swagger"
+	// _ "github.com/tools/system/docs"
+	_ "github.com/tools/system/repository"
+	"github.com/tools/system/util"
 )
 
 var _logger = logrus.New()
@@ -31,16 +31,24 @@ type APIResponse struct {
 	Token     *string     `json:"token,omitempty"`
 }
 
-// RestService implements the rest API for HRM transactions
-type RestService struct {
+// SystemRestService implements the rest API for HRM transactions
+type SystemRestService struct {
+	// authService *AuthenticationRESTService
 	dbUtil *util.PGSqlDBUtil
-
-	// employeeEntryService          *EmployeeEntryService
+	// companyService           *CompanyService
+	// yearService              *YearService
+	// uiRouteService           *UiRouteService
+	// uiRoutePermissionService *UiRoutePermissionService
+	// loginService             *LoginService
+	// // authorizationService     *AuthorizationService
+	// loginLogoutService *LoginLogoutService
+	// tokenService       *TokenService
+	// serviceDetailService          *ServiceDetailService
 }
 
-// NewRestService retuens a new initialized version of the service
-func NewRestService(config []byte, verbose bool) *RestService {
-	service := new(RestService)
+// NewSystemRestService retuens a new initialized version of the service
+func NewSystemRestService(config []byte, verbose bool) *SystemRestService {
+	service := new(SystemRestService)
 	if err := service.Init(config, verbose); err != nil {
 		_logger.Errorf("Unable to intialize service instance %v", err)
 		return nil
@@ -49,7 +57,7 @@ func NewRestService(config []byte, verbose bool) *RestService {
 }
 
 // Init initializes the service
-func (srv *RestService) Init(config []byte, verbose bool) error {
+func (srv *SystemRestService) Init(config []byte, verbose bool) error {
 	if verbose {
 		_logger.SetLevel(logrus.DebugLevel)
 	}
@@ -73,7 +81,7 @@ func (srv *RestService) Init(config []byte, verbose bool) error {
 }
 
 // Serve runs the infinite service method.
-func (srv *RestService) Serve(address string, port int, stopSignal chan bool) {
+func (srv *SystemRestService) Serve(address string, port int, stopSignal chan bool) {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	// TODO: Following to be changed for production
@@ -84,37 +92,45 @@ func (srv *RestService) Serve(address string, port int, stopSignal chan bool) {
 	corsConfig.AddAllowHeaders("Authorization", "WWW-Authenticate", "Content-Type", "Accept", "X-Requested-With")
 	corsConfig.AddExposeHeaders("Authorization", "WWW-Authenticate", "Content-Type", "Accept", "X-Requested-With")
 	router.Use(cors.New(corsConfig))
-
-	//---------- authentication portion of code ---------------
+	// JWT Auth handler
 	// router.Use(func(c *gin.Context) {
 	// 	authorizationRepository := new(repository.AuthorizationRepository)
-
-	// 	// First, try the first authorization method.
-	// 	validateAuthorizationOutputV2 := authorizationRepository.ValidateAuthorization_V2(c)
-	// 	if validateAuthorizationOutputV2.IsSuccess {
-	// 		c.Next()
-	// 		return
-	// 	}
-
-	// 	// If the first method fails, try the second authorization method.
 	// 	validateAuthorizationOutput := authorizationRepository.ValidateAuthorization(c)
 	// 	if validateAuthorizationOutput.IsSuccess {
 	// 		c.Next()
 	// 		return
 	// 	}
-
-	// 	// If both methods fail, return an unauthorized response and abort the request.
 	// 	c.JSON(http.StatusUnauthorized, validateAuthorizationOutput)
 	// 	c.Abort()
 	// })
-	// -------------- authentication portion ----------------
+	router.Use(func(c *gin.Context) {
+		// authorizationRepository := new(repository.AuthorizationRepository)
+
+		// // First, try the first authorization method.
+		// validateAuthorizationOutputV2 := authorizationRepository.ValidateAuthorization_V2(c)
+		// if validateAuthorizationOutputV2.IsSuccess {
+		// 	c.Next()
+		// 	return
+		// }
+
+		// // If the first method fails, try the second authorization method.
+		// validateAuthorizationOutput := authorizationRepository.ValidateAuthorization(c)
+		// if validateAuthorizationOutput.IsSuccess {
+		// 	c.Next()
+		// 	return
+		// }
+
+		// // If both methods fail, return an unauthorized response and abort the request.
+		// c.JSON(http.StatusUnauthorized, validateAuthorizationOutput)
+		// c.Abort()
+	})
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, buildResponse(true, "Service Available", nil))
 	})
 
-	// srv.employeeEntryService.AddRouters(router)
+	// srv.authService.AddRouters(router)
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// ReportGeneration service
 	httpServer := &http.Server{
@@ -146,6 +162,21 @@ func (srv *RestService) Serve(address string, port int, stopSignal chan bool) {
 	// Wait indefinitely
 	wg.Wait()
 }
+
+// All utility methods follows here
+
+// func parseInput(c *gin.Context, obj interface{}) bool {
+// 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+// 	if err != nil {
+// 		_logger.Errorf("Error in reading the request body %v", err)
+// 		return false
+// 	}
+// 	if err = json.Unmarshal(bodyBytes, &obj); err != nil {
+// 		_logger.Errorf("Error in parsing request body to %v %v", reflect.TypeOf(obj), err)
+// 		return false
+// 	}
+// 	return true
+// }
 
 func buildResponse(isOk bool, msg string, payload interface{}) APIResponse {
 	return APIResponse{

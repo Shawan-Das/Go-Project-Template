@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	// "github.com/tools/common/model"
-	"github.com/tools/iservice/dto"
-	// "github.com/tools/iservice/model/customreport"
-	"github.com/tools/iservice/util"
+	"github.com/tools/system/dto"
+	// "github.com/tools/system/model/customreport"
+	"github.com/tools/system/util"
 )
 
 type AuthorizationRepository struct {

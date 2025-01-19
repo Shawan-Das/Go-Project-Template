@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tools/iservice/repository"
+	"github.com/tools/system/repository"
 )
 
 type AuthorizationService struct{}

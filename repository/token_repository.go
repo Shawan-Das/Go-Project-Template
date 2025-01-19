@@ -4,8 +4,8 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/tools/iservice/dto"
-	"github.com/tools/iservice/util"
+	"github.com/tools/system/dto"
+	"github.com/tools/system/util"
 )
 
 type TokenRepository struct{}

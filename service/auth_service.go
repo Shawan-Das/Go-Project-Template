@@ -11,8 +11,8 @@ package service
 // 	jwt "github.com/dgrijalva/jwt-go"
 // 	"github.com/gin-gonic/gin"
 // 	"github.com/sirupsen/logrus"
-// 	"github.com/tools/iservice/model"
-// 	"github.com/tools/iservice/util"
+// 	"github.com/tools/system/model"
+// 	"github.com/tools/system/util"
 // )
 
 // var _asLogger = logrus.New()

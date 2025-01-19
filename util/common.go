@@ -72,7 +72,6 @@ func IsPhoneValid(e string) bool {
 }
 
 func Company_Year_into(db *gorm.DB) ([]int, []int) {
-
 	var yearList []int
 	var companyList []int
 
@@ -88,7 +87,7 @@ func GenerateArchiveDateTime() (string, string) {
 	changeDate := time.Now().Format("2006-01-02")
 	bdTimeZone, _ := time.LoadLocation("Asia/Dhaka")
 	changeTime := time.Now().In(bdTimeZone).Format("15:04:05")
-	return changeDate,changeTime
+	return changeDate, changeTime
 }
 
-//archiveTable.ChangeDate,archiveTable.ChangeTime = util.GenerateArchiveDateTime()
+// archiveTable.ChangeDate,archiveTable.ChangeTime = util.GenerateArchiveDateTime()

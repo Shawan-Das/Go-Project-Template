@@ -19,84 +19,67 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-// raw Database Connection
-func CreateRawDBConnection() *gorm.DB {
+// CreateConnection creates database connection using pgxpool
+// func CreateConnection() *pgxpool.Pool {
+// 	fmt.Println("Connecting....")
+// 	dbHost := ViperReturnStringConfigVariableFromLocalConfigJSON("db_host")
+// 	dbPort := ViperReturnIntegerConfigVariableFromLocalConfigJSON("db_port")
+// 	dbName := ViperReturnStringConfigVariableFromLocalConfigJSON("db_name")
+// 	dbUsername := ViperReturnStringConfigVariableFromLocalConfigJSON("db_username")
+// 	dbPassword := ViperReturnStringConfigVariableFromLocalConfigJSON("db_password")
+// 	connStr := "postgres://" + dbUsername + ":" + dbPassword + "@" + dbHost + ":" + strconv.Itoa(dbPort) + "/" + dbName + "?sslmode=disable"
+// 	config, err := pgxpool.ParseConfig(connStr)
+// 	logrusLogger := &logrus.Logger{
+// 		Out:          os.Stderr,
+// 		Formatter:    new(logrus.JSONFormatter),
+// 		Hooks:        make(logrus.LevelHooks),
+// 		Level:        logrus.InfoLevel,
+// 		ExitFunc:     os.Exit,
+// 		ReportCaller: false,
+// 	}
+// 	config.ConnConfig.Logger = logrusadapter.NewLogger(logrusLogger)
+// 	if err != nil {
+// 		fmt.Fprintf(os.Stderr, "Unable to parse config: %v\n", err)
+// 	}
+// 	dbpool, err := pgxpool.ConnectConfig(context.Background(), config)
+// 	if err != nil {
+// 		fmt.Println("Unable to connect to database: ")
+// 		fmt.Println(err)
+// 		// os.Exit(1)
+// 	}
+// 	return dbpool
+// }
+
+func CreateConnectionUsingGormSchema(schemaName string) *gorm.DB {
 	fmt.Println("Connecting....")
-
-	// Fetch database configuration details
-	dbHost := "HostName"
-	dbPort := 0000
-	dbName := "Databse Name"
-	dbUsername := "UserName"
-	dbPassword := "password"
-
-	// Build data source string
-	dataSourceName := "host=" + dbHost + " user=" + dbUsername +
-		" password=" + dbPassword + " dbname=" + dbName +
-		" port=" + strconv.Itoa(dbPort) + " sslmode=disable"
-
-	// Set up logging for GORM
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
-		logger.Config{
-			LogLevel: logger.Info,
-			Colorful: true,
-		},
-	)
-
-	// Open the database connection
-	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
-		Logger: newLogger,
-		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
-		},
-		DisableForeignKeyConstraintWhenMigrating: true,
-	})
-	if err != nil {
-		panic("failed to connect to the database: " + err.Error())
-	}
-
-	return db
-}
-
-// main database connection
-func CreateDBConnection() *gorm.DB {
-	fmt.Println("Connecting....")
-
-	// Fetch database configuration details
 	dbHost := ViperReturnStringConfigVariableFromLocalConfigJSON("db_host")
 	dbPort := ViperReturnIntegerConfigVariableFromLocalConfigJSON("db_port")
 	dbName := ViperReturnStringConfigVariableFromLocalConfigJSON("db_name")
 	dbUsername := ViperReturnStringConfigVariableFromLocalConfigJSON("db_username")
 	dbPassword := ViperReturnStringConfigVariableFromLocalConfigJSON("db_password")
 
-	// Build data source string
-	dataSourceName := "host=" + dbHost + " user=" + dbUsername +
-		" password=" + dbPassword + " dbname=" + dbName +
-		" port=" + strconv.Itoa(dbPort) + " sslmode=disable"
-
-	// Set up logging for GORM
+	dataSourceName := "host=" + dbHost + " user=" + dbUsername + " password=" + dbPassword + " dbname=" + dbName + " port=" + strconv.Itoa(dbPort) + " sslmode=disable"
 	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
-			LogLevel: logger.Info,
+			LogLevel: logger.Info, // Log level
 			Colorful: true,
 		},
 	)
-
-	// Open the database connection
 	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
 		Logger: newLogger,
 		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   ViperReturnStringConfigVariableFromLocalConfigJSON(schemaName) + ".",
 			SingularTable: true,
 		},
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
-		panic("failed to connect to the database: " + err.Error())
+		// fmt.Println("failed to connect database")
+		panic(err)
+	} else {
+		return db
 	}
-
-	return db
 }
 
 // CreateConnectionUsingGormToProcurementSchema creates database connection using gorm to procurement schema
