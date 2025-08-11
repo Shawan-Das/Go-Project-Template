@@ -1,4 +1,4 @@
 
 *.exe
-iservice
+service
 .vscode/settings.json

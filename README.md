@@ -9,7 +9,7 @@ A Go-based REST API service providing authentication, token management, and data
 - Token creation, validation, and time extension
 - Email functionality with SMTP support
 - CORS-enabled REST API endpoints
-- Multi-schema database support (common, accounts, sitlpos, iservice)
+- Multi-schema database support (common, accounts)
 - Configuration-based authorization bypass
 
 ## Prerequisites
@@ -61,12 +61,12 @@ go build
 ### Running the Service
 
 ```bash
-./iservice <port> config/local-config.json
+./service <port> config/local-config.json
 ```
 
 Example:
 ```bash
-./iservice 8080 config/local-config.json
+./service 8080 config/local-config.json
 ```
 
 ### Development Commands
@@ -78,7 +78,7 @@ gofumpt -l -w .
 
 Build and run:
 ```bash
-gofumpt -l -w . && go build && ./iservice 8080 config/local-config.json
+gofumpt -l -w . && go build && ./service 8080 config/local-config.json
 ```
 
 ### Cross-platform Build (Linux)

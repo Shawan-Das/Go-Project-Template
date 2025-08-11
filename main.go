@@ -17,7 +17,7 @@ import (
 var _version = "default"
 
 func main() {
-	fmt.Println("Starting  iService ", _version)
+	fmt.Println("Starting  Server ", _version)
 	defer fmt.Println("Done....")
 	// port := flag.Int("p", 7037, "Service listen port")
 	bindAddress := flag.String("b", "0.0.0.0", "Bind address")

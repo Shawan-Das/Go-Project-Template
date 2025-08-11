@@ -1,5 +1,5 @@
 1)go build 
-(it will make .\iservice.exe  |||| use command dir to check if the build file is really there)
+(it will make .\service.exe  |||| use command dir to check if the build file is really there)
 
 2)
 formatter: (first time: go install mvdan.cc/gofumpt@latest)

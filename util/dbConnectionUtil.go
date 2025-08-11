@@ -182,7 +182,7 @@ func CreateConnectionUsingGormToSitlPosSchema() *gorm.DB {
 }
 
 // CreateConnectionUsingGormToProcurementSchema creates database connection using gorm to procurement schema
-func CreateConnectionUsingGormToiServiceSchema() *gorm.DB {
+func CreateConnectionUsingGormToServiceSchema() *gorm.DB {
 	fmt.Println("Connecting....")
 	dbHost := ViperReturnStringConfigVariableFromLocalConfigJSON("db_host")
 	dbPort := ViperReturnIntegerConfigVariableFromLocalConfigJSON("db_port")
@@ -201,7 +201,7 @@ func CreateConnectionUsingGormToiServiceSchema() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dataSourceName), &gorm.Config{
 		Logger: newLogger,
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   ViperReturnStringConfigVariableFromLocalConfigJSON("iservice_schema_name") + ".",
+			TablePrefix:   ViperReturnStringConfigVariableFromLocalConfigJSON("service_schema_name") + ".",
 			SingularTable: true,
 		},
 		DisableForeignKeyConstraintWhenMigrating: true,

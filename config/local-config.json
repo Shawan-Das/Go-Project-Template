@@ -48,7 +48,7 @@
 	"common_schema_name": "common",
     "accounts_schema_name": "accounts",
 	"sitlpos_schema_name": "sitlpos",
-	"iservice_schema_name": "iservice",
+	"service_schema_name": "service",
 	"db_host": "118.67.213.45",
 	"db_port": 9432,
 	"db_name": "satcomit",
